@@ -1,0 +1,316 @@
+{
+  "_description": "Afya Health Cross-Border Fee Configuration. Edit this file to update fee rules, tax rates, FX spreads, and payment method settings. No code changes required.",
+  "_instructions": {
+    "adding_a_country": "Add a new key under 'countries' with currency, settlement_currency, tax config, and payment_methods.",
+    "updating_a_fee": "Find the country → payment_method → processor_fee or payment_method_fee and update the values.",
+    "fee_types": {
+      "percentage_plus_fixed": "Charges percentage of amount + a fixed fee. Fields: percentage, fixed.",
+      "fixed": "Charges a flat fee regardless of amount. Fields: fixed.",
+      "tiered": "Different rates based on transaction amount. Fields: tiers (list of {max_amount, percentage, fixed}).",
+      "none": "No fee charged. No additional fields needed."
+    },
+    "tax_applies_to": "List which fee components the tax applies to: 'processor_fee', 'payment_method_fee'.",
+    "fee_bearer": "Who pays the fees: 'merchant' (Afya absorbs) or 'customer' (added to customer total)."
+  },
+  "countries": {
+    "KE": {
+      "name": "Kenya",
+      "currency": "KES",
+      "settlement_currency": "USD",
+      "tax": {
+        "name": "VAT",
+        "rate_percent": 16.0,
+        "applies_to": ["processor_fee", "payment_method_fee"],
+        "description": "16% VAT applied on processor and payment method fees"
+      },
+      "payment_methods": {
+        "mobile_money": {
+          "name": "M-Pesa Mobile Money",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 1.5,
+            "fixed": 0.00,
+            "description": "1.5% processor fee for mobile money"
+          },
+          "payment_method_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 1.0,
+            "fixed": 10.00,
+            "description": "1.0% + 10 KES mobile money network fee"
+          }
+        },
+        "card": {
+          "name": "Card Payment (Visa/Mastercard)",
+          "fee_bearer": "customer",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 2.9,
+            "fixed": 10.00,
+            "description": "2.9% + 10 KES card processing fee"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for cards in Kenya"
+          }
+        },
+        "bank_transfer": {
+          "name": "Bank Transfer (EFT)",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "fixed",
+            "fixed": 50.00,
+            "description": "Flat 50 KES per bank transfer"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for bank transfers"
+          }
+        }
+      }
+    },
+    "NG": {
+      "name": "Nigeria",
+      "currency": "NGN",
+      "settlement_currency": "USD",
+      "tax": {
+        "name": "VAT",
+        "rate_percent": 7.5,
+        "applies_to": ["processor_fee"],
+        "description": "7.5% VAT applied on processor fees only"
+      },
+      "payment_methods": {
+        "mobile_money": {
+          "name": "MTN Mobile Money",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 1.8,
+            "fixed": 25.00,
+            "description": "1.8% + 25 NGN processor fee for mobile money"
+          },
+          "payment_method_fee": {
+            "type": "tiered",
+            "tiers": [
+              {
+                "max_amount": 10000.00,
+                "percentage": 3.2,
+                "fixed": 50.00,
+                "description": "3.2% + 50 NGN for transactions up to 10,000 NGN"
+              },
+              {
+                "max_amount": null,
+                "percentage": 2.5,
+                "fixed": 50.00,
+                "description": "2.5% + 50 NGN for transactions above 10,000 NGN"
+              }
+            ],
+            "description": "Tiered mobile money fee based on transaction amount"
+          }
+        },
+        "card": {
+          "name": "Card Payment (Visa/Mastercard)",
+          "fee_bearer": "customer",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 3.5,
+            "fixed": 100.00,
+            "description": "3.5% + 100 NGN card processing fee"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for cards in Nigeria"
+          }
+        },
+        "bank_transfer": {
+          "name": "Bank Transfer (NIBSS)",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "fixed",
+            "fixed": 75.00,
+            "description": "Flat 75 NGN per bank transfer"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for bank transfers"
+          }
+        }
+      }
+    },
+    "GH": {
+      "name": "Ghana",
+      "currency": "GHS",
+      "settlement_currency": "GHS",
+      "tax": {
+        "name": "Combined Tax (VAT + NHIL + GETFund)",
+        "rate_percent": 15.0,
+        "applies_to": ["processor_fee", "payment_method_fee"],
+        "description": "15% combined tax on all fee components"
+      },
+      "payment_methods": {
+        "mobile_money": {
+          "name": "MTN/Vodafone Mobile Money",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 1.5,
+            "fixed": 0.50,
+            "description": "1.5% + 0.50 GHS processor fee for mobile money"
+          },
+          "payment_method_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 1.0,
+            "fixed": 0.20,
+            "description": "1.0% + 0.20 GHS mobile money network fee"
+          }
+        },
+        "card": {
+          "name": "Card Payment (Visa/Mastercard)",
+          "fee_bearer": "customer",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 2.5,
+            "fixed": 2.00,
+            "description": "2.5% + 2.00 GHS card processing fee"
+          },
+          "payment_method_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 0.5,
+            "fixed": 0.00,
+            "description": "0.5% card scheme fee"
+          }
+        },
+        "bank_transfer": {
+          "name": "Bank Transfer (GhIPSS)",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "fixed",
+            "fixed": 3.00,
+            "description": "Flat 3.00 GHS per bank transfer"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for bank transfers"
+          }
+        }
+      }
+    },
+    "ZA": {
+      "name": "South Africa",
+      "currency": "ZAR",
+      "settlement_currency": "USD",
+      "tax": {
+        "name": "No Tax on Fees",
+        "rate_percent": 0.0,
+        "applies_to": [],
+        "description": "No tax applied on processing fees in South Africa"
+      },
+      "payment_methods": {
+        "mobile_money": {
+          "name": "SnapScan / Zapper",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 2.0,
+            "fixed": 5.00,
+            "description": "2.0% + 5.00 ZAR processor fee for mobile payments"
+          },
+          "payment_method_fee": {
+            "type": "percentage_plus_fixed",
+            "percentage": 0.5,
+            "fixed": 0.00,
+            "description": "0.5% mobile payment network fee"
+          }
+        },
+        "card": {
+          "name": "Card Payment (Visa/Mastercard)",
+          "fee_bearer": "customer",
+          "processor_fee": {
+            "type": "tiered",
+            "tiers": [
+              {
+                "max_amount": 1000.00,
+                "percentage": 3.5,
+                "fixed": 5.00,
+                "description": "3.5% + 5 ZAR for transactions up to 1,000 ZAR"
+              },
+              {
+                "max_amount": 10000.00,
+                "percentage": 2.8,
+                "fixed": 5.00,
+                "description": "2.8% + 5 ZAR for transactions 1,001 - 10,000 ZAR"
+              },
+              {
+                "max_amount": null,
+                "percentage": 2.2,
+                "fixed": 5.00,
+                "description": "2.2% + 5 ZAR for transactions above 10,000 ZAR"
+              }
+            ],
+            "description": "Tiered card processing fee based on transaction amount"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for cards"
+          }
+        },
+        "bank_transfer": {
+          "name": "Bank Transfer (EFT)",
+          "fee_bearer": "merchant",
+          "processor_fee": {
+            "type": "fixed",
+            "fixed": 15.00,
+            "description": "Flat 15.00 ZAR per bank transfer"
+          },
+          "payment_method_fee": {
+            "type": "none",
+            "description": "No additional payment method fee for bank transfers"
+          }
+        }
+      }
+    }
+  },
+  "fx_rates": {
+    "_description": "Foreign exchange rates for currency conversion. mid_market_rate is the base rate, spread_percent is the markup applied.",
+    "KES_USD": {
+      "mid_market_rate": 0.0065,
+      "spread_percent": 2.0,
+      "description": "Kenyan Shilling to US Dollar"
+    },
+    "NGN_USD": {
+      "mid_market_rate": 0.00062,
+      "spread_percent": 3.0,
+      "description": "Nigerian Naira to US Dollar"
+    },
+    "ZAR_USD": {
+      "mid_market_rate": 0.053,
+      "spread_percent": 2.5,
+      "description": "South African Rand to US Dollar"
+    },
+    "GHS_GHS": {
+      "mid_market_rate": 1.0,
+      "spread_percent": 0.0,
+      "description": "Ghana Cedi to Ghana Cedi (no conversion)"
+    },
+    "KES_KES": {
+      "mid_market_rate": 1.0,
+      "spread_percent": 0.0,
+      "description": "Self-pair, no conversion"
+    },
+    "NGN_NGN": {
+      "mid_market_rate": 1.0,
+      "spread_percent": 0.0,
+      "description": "Self-pair, no conversion"
+    },
+    "ZAR_ZAR": {
+      "mid_market_rate": 1.0,
+      "spread_percent": 0.0,
+      "description": "Self-pair, no conversion"
+    },
+    "USD_USD": {
+      "mid_market_rate": 1.0,
+      "spread_percent": 0.0,
+      "description": "Self-pair, no conversion"
+    }
+  }
+}
